@@ -178,7 +178,7 @@ export default function InterviewRoomPage({ params }) {
         }
       />
 
-      <main className="flex-1 p-6 max-w-4xl w-full mx-auto space-y-6">
+      <main className="flex-1 p-4 sm:p-6 max-w-4xl w-full mx-auto space-y-6">
         {error && (
           <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-xs font-semibold text-danger flex items-center justify-between">
             <span>{error}</span>

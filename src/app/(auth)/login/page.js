@@ -40,9 +40,9 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-surface">
       {/* Brand Hero Panel */}
-      <div className="md:w-5/12 bg-ink text-white p-8 md:p-12 flex flex-col justify-between border-r border-border-dark">
+      <div className="md:w-5/12 bg-ink text-white p-6 sm:p-8 md:p-12 flex flex-col justify-between border-r border-border-dark">
         <div>
-          <Link href={ROUTES.HOME} className="flex items-center gap-2 mb-12">
+          <Link href={ROUTES.HOME} className="flex items-center gap-2 mb-8 md:mb-12">
             <div className="w-8 h-8 rounded-lg bg-accent flex items-center justify-center font-bold text-ink text-lg">
               P
             </div>
@@ -65,7 +65,7 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <div className="mt-8 pt-8 border-t border-border-dark">
+        <div className="mt-6 pt-6 md:mt-8 md:pt-8 border-t border-border-dark">
           <p className="text-xs text-slate-500">
             Trusted by candidates preparing for FAANG, tier-1 tech & high-growth startups.
           </p>
@@ -74,7 +74,7 @@ export default function LoginPage() {
 
       {/* Form Section */}
       <div className="flex-1 flex items-center justify-center p-6 md:p-12 bg-surface-off">
-        <div className="w-full max-w-md bg-surface p-8 rounded-2xl border border-border-light shadow-sm">
+        <div className="w-full max-w-md bg-surface p-6 sm:p-8 rounded-2xl border border-border-light shadow-sm">
           <div className="mb-6">
             <h2 className="text-2xl font-bold text-ink">Sign in to your account</h2>
             <p className="text-sm text-slate-500 mt-1">

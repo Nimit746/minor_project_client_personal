@@ -36,8 +36,8 @@ export function AnswerForm({ onSubmit, isSubmitting = false }) {
         helperText="Enforce structured reasoning: Problem framing → Solution approach → Trade-offs."
       />
 
-      <div className="flex items-center justify-between pt-1">
-        <span className="text-xs text-slate-500">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-1">
+        <span className="text-xs text-slate-500 sm:pr-4">
           Answers are calibrated directly by the AI interviewer against top tier hiring bars.
         </span>
 
@@ -47,6 +47,7 @@ export function AnswerForm({ onSubmit, isSubmitting = false }) {
           size="md"
           loading={isSubmitting}
           disabled={!answer.trim() || isSubmitting}
+          className="w-full sm:w-auto shrink-0"
         >
           Submit Answer →
         </Button>

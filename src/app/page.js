@@ -2,9 +2,11 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
+import Typewriter from "@/components/ui/Typewriter";
 import { ROUTES } from "@/configs/routes";
 import { useAuth } from "@/context/AuthContext";
 
@@ -14,17 +16,22 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen flex flex-col bg-surface-off text-ink">
       {/* Navigation Header */}
-      <header className="h-18 border-b border-border-light bg-surface px-6 md:px-12 flex items-center justify-between sticky top-0 z-40">
-        <Link href={ROUTES.HOME} className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-accent flex items-center justify-center font-extrabold text-ink text-base shadow-xs">
-            P
-          </div>
-          <span className="font-extrabold text-xl tracking-tight text-ink">
+      <header className="h-18 border-b border-border-light bg-surface px-4 sm:px-6 md:px-12 flex items-center justify-between gap-3 sticky top-0 z-40">
+        <Link href={ROUTES.HOME} className="flex items-center gap-2.5 min-w-0">
+          <Image
+            src="/landing_page_logo.png"
+            alt="Nexora logo"
+            width={32}
+            height={32}
+            priority
+            className="w-8 h-8 rounded-lg object-contain shrink-0"
+          />
+          <span className="font-extrabold text-lg sm:text-xl tracking-tight text-ink truncate">
             Nexora
           </span>
         </Link>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           {isAuthenticated ? (
             <Link href={ROUTES.DASHBOARD}>
               <Button variant="primary" size="md">
@@ -34,13 +41,14 @@ export default function LandingPage() {
           ) : (
             <>
               <Link href={ROUTES.LOGIN}>
-                <Button variant="ghost" size="md">
+                <Button variant="ghost" size="md" className="px-3 sm:px-4">
                   Sign In
                 </Button>
               </Link>
               <Link href={ROUTES.REGISTER}>
                 <Button variant="primary" size="md">
-                  Start Free Assessment
+                  <span className="hidden sm:inline">Start Free Assessment</span>
+                  <span className="sm:hidden">Start Free</span>
                 </Button>
               </Link>
             </>
@@ -49,17 +57,27 @@ export default function LandingPage() {
       </header>
 
       {/* Hero Section */}
-      <section className="bg-ink text-white py-20 px-6 md:px-12 border-b border-border-dark flex flex-col items-center text-center relative overflow-hidden">
+      <section className="bg-ink text-white py-14 sm:py-20 px-4 sm:px-6 md:px-12 border-b border-border-dark flex flex-col items-center text-center relative overflow-hidden">
         <div className="max-w-3xl space-y-6 relative z-10">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-accent/15 border border-accent/30 text-accent text-xs font-bold tracking-wide">
             <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
             AI-Calibrated Mock Interviews
           </div>
 
-          <h1 className="text-4xl sm:text-6xl font-black tracking-tight leading-tight sm:leading-none">
+          <h1 className="text-3xl sm:text-6xl font-black tracking-tight leading-tight sm:leading-none">
             Realistic Tech Mocks Tailored to{" "}
             <span className="text-accent underline decoration-accent/40 decoration-4">
-              Your Real Resume
+              <Typewriter
+                texts={[
+                  "Your Real Resume",
+                  "Your Target Company",
+                  "Your Seniority Level",
+                ]}
+                className="text-accent"
+                speed={70}
+                deleteSpeed={35}
+                delay={2200}
+              />
             </span>
             .
           </h1>
@@ -89,7 +107,7 @@ export default function LandingPage() {
           <p className="text-xs font-semibold uppercase tracking-widest text-slate-500 mb-6">
             Calibrated against hiring expectations at
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-8 text-slate-400 font-bold text-sm tracking-wide opacity-70">
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 sm:gap-8 text-slate-400 font-bold text-xs sm:text-sm tracking-wide opacity-70">
             <span>GOOGLE</span>
             <span>STRIPE</span>
             <span>DATADOG</span>
@@ -102,10 +120,10 @@ export default function LandingPage() {
       </section>
 
       {/* 3-Step Walkthrough */}
-      <section className="py-20 px-6 md:px-12 max-w-6xl w-full mx-auto space-y-12">
+      <section className="py-14 sm:py-20 px-4 sm:px-6 md:px-12 max-w-6xl w-full mx-auto space-y-12">
         <div className="text-center space-y-2">
           <Badge variant="accent">How It Works</Badge>
-          <h2 className="text-3xl font-extrabold text-ink tracking-tight">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-ink tracking-tight">
             Three steps from resume to interview readiness
           </h2>
         </div>

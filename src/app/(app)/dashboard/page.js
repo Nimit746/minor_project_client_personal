@@ -61,7 +61,7 @@ export default function DashboardPage() {
         }
       />
 
-      <main className="flex-1 p-6 space-y-6 max-w-7xl w-full mx-auto">
+      <main className="flex-1 p-4 sm:p-6 space-y-6 max-w-7xl w-full mx-auto">
         {/* Welcome Banner */}
         <div className="bg-ink text-white rounded-2xl p-6 sm:p-8 border border-border-dark flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="space-y-2 max-w-xl">

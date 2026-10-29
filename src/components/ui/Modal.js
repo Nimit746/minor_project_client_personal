@@ -37,7 +37,7 @@ export function Modal({
       <div
         role="dialog"
         aria-modal="true"
-        className={`relative w-full ${maxWidth} bg-surface rounded-xl border border-border-light shadow-xl overflow-hidden z-10 flex flex-col`}
+        className={`relative w-full ${maxWidth} max-h-[90vh] bg-surface rounded-xl border border-border-light shadow-xl overflow-hidden z-10 flex flex-col`}
       >
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-border-light">
@@ -64,7 +64,7 @@ export function Modal({
         </div>
 
         {/* Body */}
-        <div className="px-6 py-5 text-sm text-slate-700">{children}</div>
+        <div className="px-6 py-5 text-sm text-slate-700 overflow-y-auto">{children}</div>
 
         {/* Footer */}
         {footer && (

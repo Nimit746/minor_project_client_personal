@@ -12,7 +12,7 @@ export function TurnFeedback({ feedback, score, onNext, isLastTurn = false }) {
 
   return (
     <div className="bg-surface rounded-2xl border border-border-light p-6 md:p-8 space-y-5 animate-in fade-in duration-300">
-      <div className="flex items-center justify-between pb-3 border-b border-border-light">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-border-light">
         <div className="flex items-center gap-3">
           <span className="w-8 h-8 rounded-full bg-accent/20 border border-accent/40 flex items-center justify-center font-bold text-emerald-800 text-xs">
             ✓
@@ -78,7 +78,7 @@ export function TurnFeedback({ feedback, score, onNext, isLastTurn = false }) {
       </div>
 
       <div className="pt-3 border-t border-border-light flex justify-end">
-        <Button variant="primary" size="md" onClick={onNext}>
+        <Button variant="primary" size="md" onClick={onNext} className="w-full sm:w-auto">
           {isLastTurn ? "Finish & View Full Summary →" : "Next Question →"}
         </Button>
       </div>

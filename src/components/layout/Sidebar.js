@@ -2,13 +2,16 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ROUTES } from "@/configs/routes";
 import { useAuth } from "@/context/AuthContext";
+import { useMobileNav } from "./AppShell";
 
 export function Sidebar() {
   const pathname = usePathname();
   const { logout, user } = useAuth();
+  const { isOpen, close } = useMobileNav();
 
   const navItems = [
     {
@@ -42,62 +45,91 @@ export function Sidebar() {
   ];
 
   return (
-    <aside className="w-64 bg-ink text-white flex flex-col justify-between shrink-0 border-r border-border-dark min-h-screen">
-      <div>
-        {/* Brand Header */}
-        <div className="h-16 flex items-center px-6 border-b border-border-dark">
-          <Link href={ROUTES.DASHBOARD} className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-accent flex items-center justify-center font-bold text-ink text-base">
-              P
-            </div>
-            <span className="font-bold text-lg tracking-tight text-white">
-              Nexora
-            </span>
-          </Link>
-        </div>
+    <>
+      {/* Mobile backdrop */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-ink/60 backdrop-blur-xs md:hidden"
+          onClick={close}
+          aria-hidden="true"
+        />
+      )}
 
-        {/* Navigation */}
-        <nav className="p-4 space-y-1">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                  isActive
+      <aside
+        className={`fixed md:static inset-y-0 left-0 z-50 md:z-auto w-64 bg-ink text-white flex flex-col justify-between shrink-0 border-r border-border-dark overflow-y-auto transition-transform duration-300 ease-in-out md:translate-x-0 md:min-h-screen ${isOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
+      >
+        <div>
+          {/* Brand Header */}
+          <div className="h-16 flex items-center justify-between px-6 border-b border-border-dark">
+            <Link href={ROUTES.DASHBOARD} className="flex items-center gap-2.5">
+              <Image
+                src="/dashboard_logo.png"
+                alt="Nexora logo"
+                width={32}
+                height={32}
+                className="w-8 h-8 object-contain shrink-0"
+              />
+              <span className="font-bold text-lg tracking-tight text-white">
+                Nexora
+              </span>
+            </Link>
+
+            {/* Close button (mobile only) */}
+            <button
+              onClick={close}
+              className="md:hidden p-1.5 -mr-1.5 text-slate-500 hover:text-white rounded-lg transition-colors"
+              aria-label="Close navigation"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Navigation */}
+          <nav className="p-4 space-y-1">
+            {navItems.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={close}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${isActive
                     ? "bg-accent text-ink font-semibold"
                     : "text-slate-500 hover:text-white hover:bg-white/5"
-                }`}
-              >
-                {item.icon}
-                <span>{item.label}</span>
-              </Link>
-            );
-          })}
-        </nav>
-      </div>
-
-      {/* User profile & Logout */}
-      <div className="p-4 border-t border-border-dark">
-        <div className="flex items-center justify-between">
-          <div className="min-w-0 pr-2">
-            <p className="text-sm font-semibold text-white truncate">
-              {user?.full_name || "Candidate"}
-            </p>
-            <p className="text-xs text-slate-500 truncate">{user?.email}</p>
-          </div>
-          <button
-            onClick={logout}
-            title="Sign out"
-            className="p-2 text-slate-500 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-            </svg>
-          </button>
+                    }`}
+                >
+                  {item.icon}
+                  <span>{item.label}</span>
+                </Link>
+              );
+            })}
+          </nav>
         </div>
-      </div>
-    </aside>
+
+        {/* User profile & Logout */}
+        <div className="p-4 border-t border-border-dark">
+          <div className="flex items-center justify-between">
+            <div className="min-w-0 pr-2">
+              <p className="text-sm font-semibold text-white truncate">
+                {user?.full_name || "Candidate"}
+              </p>
+              <p className="text-xs text-slate-500 truncate">{user?.email}</p>
+            </div>
+            <button
+              onClick={logout}
+              title="Sign out"
+              className="p-2 text-slate-500 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </aside>
+    </>
   );
 }

@@ -1,14 +1,25 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState, createContext, useContext } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { Sidebar } from "./Sidebar";
 import { ROUTES } from "@/configs/routes";
 
+const MobileNavContext = createContext({
+  isOpen: false,
+  open: () => { },
+  close: () => { },
+});
+
+export function useMobileNav() {
+  return useContext(MobileNavContext);
+}
+
 export function AppShell({ children }) {
   const { isAuthenticated, loading } = useAuth();
   const router = useRouter();
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
@@ -34,11 +45,19 @@ export function AppShell({ children }) {
   }
 
   return (
-    <div className="min-h-screen flex bg-surface-off text-ink">
-      <Sidebar />
-      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
-        {children}
+    <MobileNavContext.Provider
+      value={{
+        isOpen: isMobileNavOpen,
+        open: () => setIsMobileNavOpen(true),
+        close: () => setIsMobileNavOpen(false),
+      }}
+    >
+      <div className="min-h-screen flex bg-surface-off text-ink">
+        <Sidebar />
+        <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
+          {children}
+        </div>
       </div>
-    </div>
+    </MobileNavContext.Provider>
   );
 }

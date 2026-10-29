@@ -231,7 +231,7 @@ export default function ResumesPage() {
     <div className="flex-1 flex flex-col">
       <Topbar title="Resumes & Mock Calibration" />
 
-      <main className="flex-1 p-6 space-y-6 max-w-7xl w-full mx-auto">
+      <main className="flex-1 p-4 sm:p-6 space-y-6 max-w-7xl w-full mx-auto">
         {error && (
           <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-xs font-semibold text-danger flex items-center justify-between">
             <span>{error}</span>
@@ -259,7 +259,7 @@ export default function ResumesPage() {
             </Card>
 
             <Card className="p-6">
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 mb-4">
                 <h3 className="font-bold text-base text-ink">
                   Your Resumes ({resumes.length})
                 </h3>
@@ -298,7 +298,7 @@ export default function ResumesPage() {
 
           {/* Right: Mock Calibration Launcher */}
           <div className="lg:col-span-5">
-            <Card className="p-6 sticky top-6">
+            <Card className="p-6 lg:sticky lg:top-6">
               <div className="space-y-1 mb-5">
                 <span className="text-xs font-bold uppercase tracking-wider text-accent">
                   Session Setup
@@ -324,16 +324,15 @@ export default function ResumesPage() {
                         {selectedResume.filename}
                       </span>
                       <span
-                        className={`text-xs font-semibold ${
-                          (() => {
+                        className={`text-xs font-semibold ${(() => {
                             const s = selectedResume.status?.toLowerCase() ?? "";
                             return s === "pending" || s === "processing"
                               ? "text-amber-500"
                               : s === "failed"
-                              ? "text-danger"
-                              : "text-accent";
+                                ? "text-danger"
+                                : "text-accent";
                           })()
-                        }`}
+                          }`}
                       >
                         {(() => {
                           const s = selectedResume.status?.toLowerCase() ?? "";
@@ -376,11 +375,10 @@ export default function ResumesPage() {
                         key={level}
                         type="button"
                         onClick={() => setDifficulty(level)}
-                        className={`py-2 px-3 rounded-md text-xs font-semibold capitalize border transition-all ${
-                          difficulty === level
+                        className={`py-2 px-3 rounded-md text-xs font-semibold capitalize border transition-all ${difficulty === level
                             ? "bg-ink text-white border-ink shadow-xs"
                             : "bg-surface text-slate-700 border-border-light hover:bg-surface-off"
-                        }`}
+                          }`}
                       >
                         {level}
                       </button>
