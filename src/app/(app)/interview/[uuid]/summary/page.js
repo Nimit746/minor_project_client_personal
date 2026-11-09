@@ -65,8 +65,22 @@ export default function InterviewSummaryPage({ params }) {
     );
   }
 
-  const overallScore = interview?.summary?.score != null ? Math.round(interview.summary.score) : 82;
   const turns = Array.isArray(interview?.turns) ? interview.turns : [];
+
+  // Derive score from interview summary, or average of turn scores if summary.score is missing
+  const overallScore = (() => {
+    if (interview?.summary?.score != null) {
+      return Math.round(interview.summary.score);
+    }
+    const scoredTurns = turns.filter((t) => t.score != null);
+    if (scoredTurns.length > 0) {
+      const avg =
+        scoredTurns.reduce((acc, curr) => acc + curr.score, 0) /
+        scoredTurns.length;
+      return Math.round(avg);
+    }
+    return null;
+  })();
 
   return (
     <div className="flex-1 flex flex-col">
@@ -115,7 +129,7 @@ export default function InterviewSummaryPage({ params }) {
             <div className="bg-white/5 border border-white/10 px-6 py-4 rounded-xl text-center">
               <p className="text-xs text-slate-500 font-medium">Overall Score</p>
               <p className="text-4xl font-extrabold text-accent mt-0.5">
-                {overallScore} / 100
+                {overallScore != null ? `${overallScore} / 100` : "— / 100"}
               </p>
             </div>
             <Button
