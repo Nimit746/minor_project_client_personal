@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { getErrorMessage } from "@/utils/errors";
 import { ROUTES } from "@/configs/routes";
+import Image from "next/image";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -43,9 +44,13 @@ export default function LoginPage() {
       <div className="md:w-5/12 bg-ink text-white p-6 sm:p-8 md:p-12 flex flex-col justify-between border-r border-border-dark">
         <div>
           <Link href={ROUTES.HOME} className="flex items-center gap-2 mb-8 md:mb-12">
-            <div className="w-8 h-8 rounded-lg bg-accent flex items-center justify-center font-bold text-ink text-lg">
-              P
-            </div>
+            <Image
+              src="/dashboard_logo.png"
+              alt="Nexora logo"
+              width={32}
+              height={32}
+              className="w-8 h-8 object-contain shrink-0"
+            />
             <span className="font-bold text-xl tracking-tight text-white">
               Nexora
             </span>
