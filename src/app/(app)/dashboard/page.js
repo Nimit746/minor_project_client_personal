@@ -8,14 +8,17 @@ import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { ScoreLineChart } from "@/components/dashboard/ScoreLineChart";
 import { TopicRadarChart } from "@/components/dashboard/TopicRadarChart";
-import { listInterviews } from "@/services/interviewService";
+import { listInterviews, getInterview } from "@/services/interviewService";
 import { listResumes } from "@/services/resumeService";
 import { ROUTES } from "@/configs/routes";
 import { useAuth } from "@/context/AuthContext";
 
 export default function DashboardPage() {
   const { user } = useAuth();
+  // `interviews` holds lightweight list items (InterviewSummary[]) for the table.
   const [interviews, setInterviews] = useState([]);
+  // `detailedInterviews` holds full InterviewRead objects with `summary` + `turns`.
+  const [detailedInterviews, setDetailedInterviews] = useState([]);
   const [resumes, setResumes] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -25,8 +28,21 @@ export default function DashboardPage() {
         listInterviews().catch(() => []),
         listResumes().catch(() => []),
       ]);
-      setInterviews(Array.isArray(interviewsData) ? interviewsData : []);
+      const list = Array.isArray(interviewsData) ? interviewsData : [];
+      setInterviews(list);
       setResumes(Array.isArray(resumesData) ? resumesData : []);
+
+      // Fetch full detail for completed interviews so we have `summary.score`
+      // and per-turn `topic`/`score` data needed by the charts.
+      const completedList = list.filter((i) => i.status === "completed");
+      if (completedList.length > 0) {
+        const details = await Promise.all(
+          completedList.map((i) => getInterview(i.uuid).catch(() => null))
+        );
+        setDetailedInterviews(details.filter(Boolean));
+      } else {
+        setDetailedInterviews([]);
+      }
     } finally {
       setLoading(false);
     }
@@ -36,17 +52,42 @@ export default function DashboardPage() {
     loadDashboardData();
   }, [loadDashboardData]);
 
-  // Derived metrics
-  const completedInterviews = interviews.filter((i) => i.status === "completed");
+  // ── Derived metrics ───────────────────────────────────────────────────────
+
+  // Use detailed data (InterviewRead) for score calculations since the list
+  // endpoint returns InterviewSummary which has no `summary` field.
+  const completedInterviews = detailedInterviews;
+
   const avgScore =
     completedInterviews.length > 0
       ? Math.round(
           completedInterviews.reduce(
-            (acc, curr) => acc + (curr.summary?.score || 0),
+            (acc, curr) => acc + (curr.summary?.score ?? 0),
             0
           ) / completedInterviews.length
         )
       : null;
+
+  // Build per-topic average scores from all turns across completed interviews.
+  const topicScores = (() => {
+    const topicMap = {};
+    for (const interview of completedInterviews) {
+      const turns = Array.isArray(interview.turns) ? interview.turns : [];
+      for (const turn of turns) {
+        if (turn.topic && turn.score != null) {
+          if (!topicMap[turn.topic]) {
+            topicMap[turn.topic] = { total: 0, count: 0 };
+          }
+          topicMap[turn.topic].total += turn.score;
+          topicMap[turn.topic].count += 1;
+        }
+      }
+    }
+    return Object.entries(topicMap).map(([topic, { total, count }]) => ({
+      topic,
+      score: Math.round(total / count),
+    }));
+  })();
 
   return (
     <div className="flex-1 flex flex-col">
@@ -179,7 +220,7 @@ export default function DashboardPage() {
               </div>
               <Badge variant="accent">Trend</Badge>
             </div>
-            <ScoreLineChart interviews={interviews} />
+            <ScoreLineChart interviews={detailedInterviews} />
           </Card>
 
           <Card className="p-6">
@@ -194,7 +235,7 @@ export default function DashboardPage() {
               </div>
               <Badge variant="default">All Topics</Badge>
             </div>
-            <TopicRadarChart />
+            <TopicRadarChart topicScores={topicScores} />
           </Card>
         </div>
 
@@ -267,11 +308,17 @@ export default function DashboardPage() {
                   </div>
 
                   <div className="flex items-center gap-3">
-                    {interview.summary?.score != null && (
-                      <span className="text-sm font-extrabold text-accent">
-                        {Math.round(interview.summary.score)}/100
-                      </span>
-                    )}
+                    {(() => {
+                      const detail = detailedInterviews.find(
+                        (d) => d.uuid === interview.uuid
+                      );
+                      const score = detail?.summary?.score;
+                      return score != null ? (
+                        <span className="text-sm font-extrabold text-accent">
+                          {Math.round(score)}/100
+                        </span>
+                      ) : null;
+                    })()}
                     <Link
                       href={
                         interview.status === "completed"
